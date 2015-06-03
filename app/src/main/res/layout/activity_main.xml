@@ -1,0 +1,56 @@
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <!--<ImageView-->
+        <!--android:layout_width="200dp"-->
+        <!--android:layout_height="200dp"-->
+        <!--android:id="@+id/resultImage"-->
+        <!--android:scaleType="centerCrop" />-->
+
+    <Button
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/pressButton"
+    android:text="Show" />
+
+    <!--<com.testenglish.vladyslav.cropimage.CustomImageVIew-->
+    <!--android:id="@+id/testimage"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent" />-->
+
+
+    <!--<com.cropmy.vladyslav.cropandroid.CropView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:id="@+id/CropViewImage" />-->
+
+    <!--<com.cropmy.vladyslav.cropandroid.CustomImageVIew-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:id="@+id/image"-->
+    <!--android:scaleType="centerCrop" />-->
+    <com.cropmy.vladyslav.cropandroid.TouchImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/touchImageView" />
+    <!--<com.edmodo.cropper.CropImageView-->
+
+    <!--android:id="@+id/CropImageView"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent" />-->
+
+
+    <!--<View-->
+    <!--android:id="@+id/frontView"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:clickable="false" />-->
+</LinearLayout>
+
+
+
