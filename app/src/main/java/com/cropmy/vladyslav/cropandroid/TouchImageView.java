@@ -416,8 +416,10 @@ public class TouchImageView extends ImageView {
         canvas.save(Canvas.ALL_SAVE_FLAG); //
         canvas.restore();
 
-        return CropFromBitmap.scaleCenterCrop(bitmap, drawLine.getmViewWidth(), drawLine
+        Bitmap res =  CropFromBitmap.scaleCenterCrop(bitmap, drawLine.getmViewWidth(), drawLine
                 .getmViewWidth());
+        bitmap.recycle();
+        return res;
 //        return bitmap;
     }
 

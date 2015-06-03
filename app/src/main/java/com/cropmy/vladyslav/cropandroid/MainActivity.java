@@ -79,7 +79,7 @@ public class MainActivity extends Activity implements View.OnTouchListener, View
         touchImageView = (TouchImageView) findViewById(R.id.touchImageView);
         touchImageView.setPhoto(bitmap);
 
-        touchImageView.setOnClickListener(this);
+        findViewById(R.id.pressButton).setOnClickListener(this);
     }
 
 
