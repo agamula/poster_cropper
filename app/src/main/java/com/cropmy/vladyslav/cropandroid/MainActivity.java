@@ -13,7 +13,11 @@ import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.FloatMath;
 import android.util.Log;
 import android.view.Display;
@@ -28,10 +32,16 @@ import com.android.camera.CropImageIntentBuilder;
 import com.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 
 public class MainActivity extends Activity implements View.OnTouchListener, View
         .OnClickListener, View.OnLongClickListener {
+
+    public static final String IMAGE_NAME = "image.png";
     CropImageView cropImageView;
     View frontView;
     int w, h, width, height;
@@ -53,7 +63,7 @@ public class MainActivity extends Activity implements View.OnTouchListener, View
     ImageView imageView;
     CustomImageVIew customImageVIew;
     TouchImageView touchImageView;
-    ModelBitmap modelBitmap= new ModelBitmap();
+    ModelBitmap modelBitmap = new ModelBitmap();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,91 +75,11 @@ public class MainActivity extends Activity implements View.OnTouchListener, View
         options.inDither = false;
         options.inScaled = false;
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test3,options);
-
-////        mTemplateImg.setImageBitmap(bitmap);
-//        mImg.buildDrawingCache(true);
-//        mImg.setDrawingCacheEnabled(true);
-//        mTemplateImg.buildDrawingCache(true);
-//        mTemplateImg.setDrawingCacheEnabled(true);
-
-//
-//        final int maxSize = (bitmap.getWidth() > bitmap.getHeight()) ? width : height;
-//        int outWidth;
-//        int outHeight;
-//        int inWidth = bitmap.getWidth();
-//        int inHeight = bitmap.getHeight();
-//        if (inWidth > inHeight) {
-//            outWidth = maxSize;
-//            outHeight = (inHeight * maxSize) / inWidth;
-//        } else {
-//            outHeight = maxSize;
-//            outWidth = (inWidth * maxSize) / inHeight;
-//        }
-
-        findViewById(R.id.pressButton).setOnClickListener(this);
-//        findViewById(R.id.pressButton).setVisibility(View.GONE);
-//        cropImageView = (CropImageView) findViewById(R.id.CropImageView);
-//        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, outWidth, outHeight, false);
-//        cropImageView.setImageBitmap(resizedBitmap);
-////        cropImageView.setImageBitmap(resizedBitmap);
-//        cropImageView.setAspectRatio(10, 10);
-//        cropImageView.setFixedAspectRatio(true);
-//        cropImageView.setGuidelines(2);
-
-//        cropImageView.setCropType(CropImageView.CropType.CENTER_TOP);
-//        testCruupLibriary();
-//        ImageView customImageVIew= (CustomImageVIew)findViewById(R.id.image);
-//        customImageVIew.setImageBitmap(bitmap);
-//        customImageVIew.setScaleType(ImageView.ScaleType.FIT_CENTER);  // make the image fit to
-// the center.
-//        customImageVIew.setOnTouchListener(this);
-//        customImageVIew = (CustomImageVIew) findViewById(R.id.image);
-//        customImageVIew.setScaleType(ImageView.ScaleType.CENTER_CROP);
-////        customImageVIew.setImageBitmap(bitmap);
-//
-//        customImageVIew.setImage(bitmap);
-//        customImageVIew.setDrawingCacheEnabled(true);
-//        customImageVIew.buildDrawingCache(true);
-        touchImageView =(TouchImageView)findViewById(R.id.touchImageView);
+        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test3, options);
+        touchImageView = (TouchImageView) findViewById(R.id.touchImageView);
         touchImageView.setPhoto(bitmap);
 
         touchImageView.setOnClickListener(this);
-//        cropView=(CropView)findViewById(R.id.CropViewImage);
-//        cropView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//        cropView.setImageBitmap(bitmap);
-//        imageView = (ImageView) findViewById(R.id.resultImage);
-//        imageView.setImageBitmap(touchImageView.creatNewPhoto());
-
-//        CropImageIntentBuilder cropImage = new CropImageIntentBuilder(200, 200, bitmap);
-//        BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-//        bitmapOptions.inJustDecodeBounds = false;
-//        Bitmap wallpaperBitmap = BitmapFactory.decodeResource(getResources(), R.drawable
-// .test_image, bitmapOptions);
-//
-//        cropImageView = (CropImageView) this.findViewById(R.id.CropImageView);
-//        cropImageView.setImageBitmap(resizedBitmap);
-//        cropImageView.setFixedAspectRatio(true);
-//        cropImageView.setAspectRatio(10, 10);
-//        cropImageView.rotateImage(90);
-//
-//        ImageView imageView = (ImageView) findViewById(R.id.resultImage);
-//        Bitmap croppedImage = cropImageView.getCroppedImage();
-//
-//        if (croppedImage != null) {
-//            imageView.setImageBitmap(cropImageView.getCroppedImage());
-//        }
-
-//        cropImage.setOutlineColor(0xFF03A9F4);
-//
-//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//        byte[] byteArray = stream.toByteArray();
-//
-//        cropImage.setSourceImage(byteArray);
-//
-//        imageView.setImageBitmap(BitmapFactory.decodeFile(croppedImageFile.getAbsolutePath()));
-
     }
 
 
@@ -202,7 +132,7 @@ public class MainActivity extends Activity implements View.OnTouchListener, View
 
     public boolean onTouch(View v, MotionEvent event) {
 
-       return true;
+        return true;
     }
 
     private float spacing(MotionEvent event) {
@@ -220,19 +150,48 @@ public class MainActivity extends Activity implements View.OnTouchListener, View
     @Override
     public void onClick(View view) {
         modelBitmap.setBitmap(touchImageView.creatNewPhoto());
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        modelBitmap.getBitmap().compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        Intent intent = new Intent(getApplicationContext(), ShowBitmap.class);
-        intent.putExtra("image", byteArray);
-        startActivity(intent);
 
+        File imagePath = new File(getFilesDir(), IMAGE_NAME);
+        if (!imagePath.exists()) {
+            try {
+                imagePath.createNewFile();
+                saveImage(imagePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            saveImage(imagePath);
+        }
+    }
 
+    private void saveImage(final File imagePath) {
+        new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                Boolean res;
+                try {
+                    res = modelBitmap.getBitmap().compress(Bitmap.CompressFormat.PNG, 100, new
+                            FileOutputStream(imagePath));
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    res = false;
+                }
+                return res;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean aVoid) {
+                super.onPostExecute(aVoid);
+                if(aVoid) {
+                    Intent intent = new Intent(getApplicationContext(), ShowBitmap.class);
+                    startActivity(intent);
+                }
+            }
+        }.execute();
     }
 
     @Override
     public boolean onLongClick(View view) {
-
         return false;
     }
 }
