@@ -56,10 +56,11 @@ public class MainActivity extends Activity implements  View
         options.inDither = false;
         options.inScaled = false;
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test2, options);
+        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test5, options);
         touchImageView = (TouchImageView) findViewById(R.id.touchImageView);
         touchImageView.setPhoto(bitmap);
         findViewById(R.id.pressButton).setOnClickListener(this);
+        Log.d("calculate ","1mm to px=" + Tools.mmToPx(1,this));
     }
 
     @Override

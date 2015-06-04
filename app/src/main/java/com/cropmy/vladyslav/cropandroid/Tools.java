@@ -16,6 +16,12 @@ public class Tools {
         return applyDimension(TypedValue.COMPLEX_UNIT_MM, px, metrics);
     }
 
+    public static float mmToPx(final float mm, final Context context) {
+
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, mm,
+                context.getResources().getDisplayMetrics());
+    }
+
     public static float getMaxZoom(Bitmap bitmap, Context context) {
 
         float maxZoom = getDpi(bitmap.getWidth() > bitmap.getHeight() ? bitmap.getWidth() : bitmap.getHeight(), context);
