@@ -22,7 +22,6 @@ import android.widget.ImageView;
 public class TouchImageView extends ImageView {
     float x_down = 0;
     float y_down = 0;
-    PointF start = new PointF();
     PointF mid = new PointF();
     float oldDist = 1f;
     float oldRotation = 0;
@@ -30,8 +29,6 @@ public class TouchImageView extends ImageView {
     Matrix matrix1 = new Matrix();
     Matrix savedMatrix = new Matrix();
     Matrix scaledMatrix = new Matrix();
-    private int mViewWidth = -1;
-    private int mViewHeight = -1;
     private static final int NONE = 0;
     private static final int DRAG = 1;
     private static final int ZOOM = 2;
@@ -39,7 +36,6 @@ public class TouchImageView extends ImageView {
     int mode = NONE;
     DrawLine drawLine = new DrawLine();
     boolean matrixCheck = false;
-
     int widthScreen;
     int heightScreen;
     private int misScreenSize;
