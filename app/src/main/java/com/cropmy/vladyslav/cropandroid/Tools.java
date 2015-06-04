@@ -7,9 +7,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 
-/**
- * Created by vladyslav on 5/28/15.
- */
 public class Tools {
 
     boolean isZoom = false;

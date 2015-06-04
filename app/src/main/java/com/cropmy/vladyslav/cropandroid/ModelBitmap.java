@@ -4,9 +4,7 @@ import android.graphics.Bitmap;
 
 import java.io.Serializable;
 
-/**
- * Created by vladyslav on 5/27/15.
- */
+
 public class ModelBitmap implements Serializable {
 
     public ModelBitmap(Bitmap bitmap) {
