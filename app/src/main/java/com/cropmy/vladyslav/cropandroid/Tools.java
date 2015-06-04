@@ -21,10 +21,9 @@ public class Tools {
 
     public static float getMaxZoom(Bitmap bitmap, Context context) {
         float maxZoom = getDpi(bitmap.getWidth(), context);
-        if (maxZoom > 250)
+
             return maxZoom / 250;
-        else return 250 / maxZoom;
-    }
+        }
 
     public static float applyDimension(int unit, float value,
                                        DisplayMetrics metrics) {

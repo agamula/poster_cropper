@@ -38,30 +38,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 
-public class MainActivity extends Activity implements View.OnTouchListener, View
-        .OnClickListener, View.OnLongClickListener {
+public class MainActivity extends Activity implements  View
+        .OnClickListener {
 
     public static final String IMAGE_NAME = "image.png";
-    CropImageView cropImageView;
-    View frontView;
-    int w, h, width, height;
     Bitmap bitmap;
-    ImageView mTemplateImg, mImg;
-    Matrix matrix = new Matrix();
-    Matrix savedMatrix = new Matrix();
-    private static final String TAG = "Touch";
-    // We can be in one of these 3 states
-    static final int NONE = 0;
-    static final int DRAG = 1;
-    static final int ZOOM = 2;
-    int mode = NONE;
-    CropView cropView;
-    // Remember some things for zooming
-    PointF start = new PointF();
-    PointF mid = new PointF();
-    float oldDist = 1f;
-    ImageView imageView;
-    CustomImageVIew customImageVIew;
     TouchImageView touchImageView;
     ModelBitmap modelBitmap = new ModelBitmap();
 
@@ -75,37 +56,10 @@ public class MainActivity extends Activity implements View.OnTouchListener, View
         options.inDither = false;
         options.inScaled = false;
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test3, options);
+        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test2, options);
         touchImageView = (TouchImageView) findViewById(R.id.touchImageView);
         touchImageView.setPhoto(bitmap);
-
         findViewById(R.id.pressButton).setOnClickListener(this);
-    }
-
-
-    void testCruupLibriary() {
-
-//        cropImageView=(CropImageView)findViewById(R.id.CropImageView);
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        width = size.x;
-        height = size.y;
-
-        final int maxSize = height;//(width > height) ? width : height;
-        int outWidth;
-        int outHeight;
-        int inWidth = bitmap.getWidth();
-        int inHeight = bitmap.getHeight();
-        if (inWidth > inHeight) {
-            outWidth = maxSize;
-            outHeight = (inHeight * maxSize) / inWidth;
-        } else {
-            outHeight = maxSize;
-            outWidth = (inWidth * maxSize) / inHeight;
-        }
-
-
     }
 
     @Override
@@ -130,22 +84,7 @@ public class MainActivity extends Activity implements View.OnTouchListener, View
         return super.onOptionsItemSelected(item);
     }
 
-    public boolean onTouch(View v, MotionEvent event) {
 
-        return true;
-    }
-
-    private float spacing(MotionEvent event) {
-        float x = event.getX(0) - event.getX(1);
-        float y = event.getY(0) - event.getY(1);
-        return FloatMath.sqrt(x * x + y * y);
-    }
-
-    private void midPoint(PointF point, MotionEvent event) {
-        float x = event.getX(0) + event.getX(1);
-        float y = event.getY(0) + event.getY(1);
-        point.set(x / 2, y / 2);
-    }
 
     @Override
     public void onClick(View view) {
@@ -188,10 +127,5 @@ public class MainActivity extends Activity implements View.OnTouchListener, View
                 }
             }
         }.execute();
-    }
-
-    @Override
-    public boolean onLongClick(View view) {
-        return false;
     }
 }

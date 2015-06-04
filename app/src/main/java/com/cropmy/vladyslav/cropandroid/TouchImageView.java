@@ -76,7 +76,7 @@ public class TouchImageView extends ImageView {
 
         maxScale = Tools.getMaxZoom(photo, getContext());
         minScale = 1f;
-
+         Log.d("maxScale","maxScale "+ maxScale);
 //        RectF drawableRect = new RectF(0, 0, gintama.getWidth(), gintama.getHeight());
         ///RectF viewRect = new RectF(0, 0, widthScreen, heightScreen);
 
@@ -183,7 +183,7 @@ public class TouchImageView extends ImageView {
                 midPoint(mid, event);
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (mode == ZOOM) {
+                if (mode == ZOOM && maxScale > 1.0f) {
 
                     float rotation = rotation(event) - oldRotation;
                     float newDist = spacing1(event);
@@ -277,7 +277,7 @@ public class TouchImageView extends ImageView {
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                if (mode == DRAG || mode == AFTER_ZOOM) {
+                if (mode == DRAG || mode == AFTER_ZOOM && maxScale > 1.0f) {
                     moveToEdge(mode);
                 }
                 deltaX = deltaY = 0;
@@ -420,7 +420,6 @@ public class TouchImageView extends ImageView {
                 .getmViewWidth());
         bitmap.recycle();
         return res;
-//        return bitmap;
     }
 
 }
