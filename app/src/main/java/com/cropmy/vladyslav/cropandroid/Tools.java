@@ -20,10 +20,11 @@ public class Tools {
     }
 
     public static float getMaxZoom(Bitmap bitmap, Context context) {
-        float maxZoom = getDpi(bitmap.getWidth(), context);
 
-            return maxZoom / 250;
-        }
+        float maxZoom = getDpi(bitmap.getWidth() > bitmap.getHeight() ? bitmap.getWidth() : bitmap.getHeight(), context);
+
+        return maxZoom / 250;
+    }
 
     public static float applyDimension(int unit, float value,
                                        DisplayMetrics metrics) {
@@ -48,7 +49,7 @@ public class Tools {
         float sizeWidth = Tools.pxToMm(width, context);
         float sizeInInch = sizeWidth * 0.1f / 2.54f;
         float dpi = width / sizeInInch;
-        return width/dpi;
+        return width / dpi;
     }
 
     public static int calculateInSampleSize(
