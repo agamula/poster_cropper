@@ -39,9 +39,7 @@ public class TouchImageView extends ImageView {
     int widthScreen;
     int heightScreen;
     private int misScreenSize;
-
     Bitmap gintama;
-
     private float distanceToCenterFromLeftEdge, distanceToCenterFromRightEdge,
             distanceToCenterFromTopEdge, distanceToCenterFromBottomEdge;
     private float deltaX, deltaY;
