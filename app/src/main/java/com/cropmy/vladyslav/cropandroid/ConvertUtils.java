@@ -4,10 +4,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 
-public class Tools {
+public class ConvertUtils {
+    private ConvertUtils() {
+    }
 
     boolean isZoom = false;
 
@@ -17,7 +18,6 @@ public class Tools {
     }
 
     public static float mmToPx(final float mm, final Context context) {
-
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, mm,
                 context.getResources().getDisplayMetrics());
     }
@@ -49,7 +49,7 @@ public class Tools {
     }
 
     public static float getDpi(float width, Context context) {
-        float sizeWidth = Tools.pxToMm(width, context);
+        float sizeWidth = ConvertUtils.pxToMm(width, context);
         float sizeInInch = sizeWidth * 0.1f / 2.54f;
         float dpi = width / sizeInInch;
         return width / dpi;

@@ -8,7 +8,8 @@ import android.widget.ImageView;
 
 import java.io.File;
 
-public class ShowBitmap extends Activity {
+public class ShowBitmapActivity extends Activity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

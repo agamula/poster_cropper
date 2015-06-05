@@ -1,50 +1,32 @@
 package com.cropmy.vladyslav.cropandroid;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Point;
-import android.graphics.PointF;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.util.FloatMath;
 import android.util.Log;
-import android.view.Display;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.android.camera.CropImageIntentBuilder;
-import com.edmodo.cropper.CropImageView;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 
 
 public class MainActivity extends Activity implements  View
         .OnClickListener {
 
     public static final String IMAGE_NAME = "image.png";
-    Bitmap bitmap;
-    TouchImageView touchImageView;
-    ModelBitmap modelBitmap = new ModelBitmap();
+    public static final String MARGINS_PATH = "margins.txt";
+
+    private Bitmap mBitmap;
+    private Bitmap mCroppedBitmap;
+    private TouchImageView mTouchImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,11 +38,11 @@ public class MainActivity extends Activity implements  View
         options.inDither = false;
         options.inScaled = false;
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test5, options);
-        touchImageView = (TouchImageView) findViewById(R.id.touchImageView);
-        touchImageView.setPhoto(bitmap);
+        mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test2, options);
+        mTouchImageView = (TouchImageView) findViewById(R.id.touchImageView);
+        mTouchImageView.setPhoto(mBitmap);
         findViewById(R.id.pressButton).setOnClickListener(this);
-        Log.d("calculate ","1mm to px=" + Tools.mmToPx(1,this));
+        Log.d("calculate ","1mm to px=" + ConvertUtils.mmToPx(1, this));
     }
 
     @Override
@@ -78,7 +60,7 @@ public class MainActivity extends Activity implements  View
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            touchImageView.reload();
+            mTouchImageView.reload();
             return true;
         }
 
@@ -89,22 +71,54 @@ public class MainActivity extends Activity implements  View
 
     @Override
     public void onClick(View view) {
-        modelBitmap.setBitmap(touchImageView.creatNewPhoto());
+        int countInPixels = 50;
+        Pair<Bitmap, Integer> photo = mTouchImageView.getImageInsideGrid(countInPixels);
+        mCroppedBitmap = photo.first;
 
         File imagePath = new File(getFilesDir(), IMAGE_NAME);
+        File marginPath = new File(getFilesDir(), MARGINS_PATH);
         if (!imagePath.exists()) {
             try {
                 imagePath.createNewFile();
+                marginPath.createNewFile();
+                saveMargins(marginPath, countInPixels, photo.second);
                 saveImage(imagePath);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
+            saveMargins(marginPath, countInPixels, photo.second);
             saveImage(imagePath);
         }
     }
 
+    private void saveMargins(File marginPath, int countInPixels, int encodedMargin) {
+        try {
+            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream
+                    (marginPath));
+            writer.write(countInPixels + ";" + encodedMargin);
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void saveImage(final File imagePath) {
+        boolean res = false;
+        try {
+            res = mCroppedBitmap.compress(Bitmap.CompressFormat.PNG, 100, new
+                    FileOutputStream(imagePath));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            res = false;
+        } finally {
+            if(res) {
+                Intent intent = new Intent(getApplicationContext(), ShowCroppedBitmapActivity.class);
+                startActivity(intent);
+            }
+        }   /*
+
         new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
@@ -127,6 +141,6 @@ public class MainActivity extends Activity implements  View
                     startActivity(intent);
                 }
             }
-        }.execute();
+        }.execute();  */
     }
 }

@@ -3,11 +3,13 @@ package com.cropmy.vladyslav.cropandroid;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.graphics.RectF;
 
-public class CropFromBitmap {
+public class BitmapUtils {
 
-    static public Bitmap scaleCenterCrop(Bitmap source, int newHeight, int newWidth) {
+    public static Bitmap scaleCenterCrop(Bitmap source, int newHeight, int newWidth, int
+            leftDiffMargin, int topDiffMargin) {
         int sourceWidth = source.getWidth();
         int sourceHeight = source.getHeight();
 
@@ -24,8 +26,8 @@ public class CropFromBitmap {
 
         // Let's find out the upper left coordinates if the scaled bitmap
         // should be centered in the new size give by the parameters
-        float left = (newWidth - scaledWidth) / 2;
-        float top = (newHeight - scaledHeight) / 2;
+        float left = (newWidth - scaledWidth) / 2 - leftDiffMargin;
+        float top = (newHeight - scaledHeight) / 2 - topDiffMargin;
 
         // The target rectangle for the new, scaled version of the source bitmap will now
         // be
@@ -39,7 +41,24 @@ public class CropFromBitmap {
 
         return dest;
     }
-    static public Bitmap getResizedBitmap(Bitmap bm, int newWidth) {
+
+    public static Bitmap getShowing(Bitmap bitmap, int countPixels, int margins[]) {
+        Rect targetRect = new Rect(countPixels - margins[0], countPixels - margins[1],
+                bitmap.getWidth() - countPixels + margins[2], bitmap.getHeight() - countPixels +
+                margins[3]);
+
+        int width = targetRect.width();
+        int height = targetRect.height();
+
+        Bitmap dest = Bitmap.createBitmap(width, height, bitmap.getConfig());
+        Canvas canvas = new Canvas(dest);
+        canvas.drawBitmap(bitmap, targetRect, new RectF(0, 0, width, height), null);
+        bitmap.recycle();
+        return dest;
+    }
+
+
+    public static Bitmap getResizedBitmap(Bitmap bm, int newWidth) {
 
         int width = bm.getWidth();
 
@@ -66,7 +85,7 @@ public class CropFromBitmap {
         return resizedBitmap;
     }
 
-    static public Bitmap getResizedBitmapH(Bitmap bm, int newWidth) {
+    public static Bitmap getResizedBitmapH(Bitmap bm, int newWidth) {
 
         int width = bm.getWidth();
 
